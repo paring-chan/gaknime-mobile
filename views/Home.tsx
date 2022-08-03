@@ -1,10 +1,11 @@
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView, useColorScheme, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Swiper from 'react-native-swiper'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { StyledText } from '../components'
 import { Banner } from '../types'
-import { useBanners } from '../utils'
+import { useBanners, useTheme } from '../utils'
 
 const BannerItem: React.FC<{ banner: Banner }> = ({ banner }) => {
   return (
@@ -43,21 +44,93 @@ const BannerItem: React.FC<{ banner: Banner }> = ({ banner }) => {
   )
 }
 
+const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
+  const theme = useTheme()
+
+  const opacity = React.useMemo(() => Math.min(1, scrollY / 60), [scrollY])
+
+  const isDark = useColorScheme() === 'dark'
+
+  const iconColor = React.useMemo(() => (isDark ? '#fff' : '#000'), [isDark])
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        position: 'absolute',
+        backgroundColor: `rgba(${
+          isDark ? '0, 0, 0' : '255, 255, 255'
+        }, ${opacity})`,
+        height: 48,
+      }}
+    >
+      <StyledText
+        style={{
+          color: theme.text,
+          alignSelf: 'center',
+          top: 12,
+          fontSize: 24,
+          lineHeight: 32,
+          opacity: Math.min(1, scrollY / 60),
+        }}
+        weight="Black"
+      >
+        GAKNIME
+      </StyledText>
+      <Icon
+        style={{
+          position: 'absolute',
+          right: 12,
+          top: 12,
+          color: '#fff',
+          opacity: 1 - opacity,
+        }}
+        name="search"
+        size={24}
+      />
+      <Icon
+        style={{
+          position: 'absolute',
+          right: 12,
+          top: 12,
+          color: iconColor,
+          opacity: opacity,
+        }}
+        name="search"
+        size={24}
+      />
+    </View>
+  )
+}
+
 export const Home: React.FC = () => {
   const banners = useBanners()
 
+  const [scrollY, setScrollY] = React.useState(0)
+
   return (
-    <View style={{ height: 520 }}>
-      <Swiper
-        autoplay
-        autoplayTimeout={5}
-        dotColor="rgba(255, 255, 255, 0.4)"
-        activeDotColor="#fff"
+    <View style={{ flexGrow: 1, height: 0 }}>
+      <ScrollView
+        style={{ height: '100%', width: '100%' }}
+        onScroll={(e) => {
+          setScrollY(e.nativeEvent.contentOffset.y)
+        }}
       >
-        {banners.map((x, i) => (
-          <BannerItem banner={x} key={i} />
-        ))}
-      </Swiper>
+        <View style={{ height: 520 }}>
+          <Swiper
+            autoplay
+            autoplayTimeout={5}
+            dotColor="rgba(255, 255, 255, 0.4)"
+            activeDotColor="#fff"
+          >
+            {banners.map((x, i) => (
+              <BannerItem banner={x} key={i} />
+            ))}
+          </Swiper>
+        </View>
+        <View style={{ height: 1200 }} />
+      </ScrollView>
+      <Header scrollY={scrollY} />
     </View>
   )
 }

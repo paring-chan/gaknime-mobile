@@ -9,10 +9,14 @@ const Main: React.FC = () => {
   const currentTab = useRecoilValue(currentTabAtom)
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <ScrollView style={{ flexGrow: 1 }}>
-        {currentTab === MainTabType.Main && <Home />}
-      </ScrollView>
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      {currentTab === MainTabType.Main && <Home />}
       <Footer />
     </View>
   )

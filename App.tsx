@@ -63,14 +63,23 @@ const App = () => {
   const theme = React.useMemo(() => {
     if (isDark) {
       // TODO
-      // return {}
+      return {
+        text: '#fff',
+        textInverted: '#000',
+        footerBorder: 'rgba(255, 255, 255, 0.2)',
+        primary: '#cccc00',
+        inactiveFooterItem: 'rgba(255, 255, 255, 0.4)',
+        background: '#222222',
+      }
     }
 
     return {
       text: '#000',
+      textInverted: '#fff',
       footerBorder: 'rgba(0, 0, 0, 0.2)',
       primary: '#cccc00',
       inactiveFooterItem: 'rgba(0, 0, 0, 0.4)',
+      background: '#fff',
     }
   }, [isDark])
 
@@ -99,15 +108,17 @@ const App = () => {
       </View>
     </View>
   ) : (
-    <RecoilRoot>
-      <ThemeContext.Provider value={theme}>
-        <GaknimesContext.Provider value={gaknimes}>
-          <BannersContext.Provider value={banners}>
-            <Main />
-          </BannersContext.Provider>
-        </GaknimesContext.Provider>
-      </ThemeContext.Provider>
-    </RecoilRoot>
+    <View style={{ backgroundColor: theme.background, height: '100%' }}>
+      <RecoilRoot>
+        <ThemeContext.Provider value={theme}>
+          <GaknimesContext.Provider value={gaknimes}>
+            <BannersContext.Provider value={banners}>
+              <Main />
+            </BannersContext.Provider>
+          </GaknimesContext.Provider>
+        </ThemeContext.Provider>
+      </RecoilRoot>
+    </View>
   )
 }
 
