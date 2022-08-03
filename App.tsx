@@ -44,7 +44,7 @@ const App = () => {
       setGaknimes(gaknimes)
 
       const { data: banners } = await axios.get<Banner[]>(
-        'https://gakni.tech/banners.jdson'
+        'https://gakni.tech/banners.json'
       )
 
       setBanners(banners)
