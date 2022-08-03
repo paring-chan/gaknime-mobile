@@ -16,9 +16,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from './views/Home'
 import { BackHandler, Text, useColorScheme, View } from 'react-native'
 import axios from 'axios'
-import { Gaknime } from './types'
+import { Banner, Gaknime } from './types'
 import { StyledText } from './components/Text'
 import { Button } from './components'
+import { BannersContext, GaknimesContext } from './utils'
+import { ThemeContext } from 'styled-components'
 
 const Stack = createNativeStackNavigator()
 
@@ -31,13 +33,21 @@ const App = () => {
 
   const [gaknimes, setGaknimes] = React.useState<Gaknime[]>([])
 
+  const [banners, setBanners] = React.useState<Banner[]>([])
+
   React.useEffect(() => {
     ;(async () => {
-      const { data } = await axios.get<Gaknime[]>(
+      const { data: gaknimes } = await axios.get<Gaknime[]>(
         'https://gakni.tech/gaknimes.json'
       )
 
-      setGaknimes(data)
+      setGaknimes(gaknimes)
+
+      const { data: banners } = await axios.get<Banner[]>(
+        'https://gakni.tech/banners.jdson'
+      )
+
+      setBanners(banners)
 
       setLoading(false)
     })().catch((err) => {
@@ -55,10 +65,12 @@ const App = () => {
   }, [])
 
   const theme = React.useMemo(() => {
-    if (isDark) return {}
+    if (isDark) {
+      return {}
+    }
 
     return {
-      '--text': '#000',
+      text: '#000',
     }
   }, [isDark])
 
@@ -69,7 +81,6 @@ const App = () => {
         alignItems: 'center',
         height: '100%',
         flexDirection: 'column',
-        ...theme,
       }}
     >
       <StyledText style={{ fontSize: 24 }} weight="Bold">
@@ -78,7 +89,7 @@ const App = () => {
       <StyledText style={{ fontSize: 16 }} weight="Light">
         {error.message}
       </StyledText>
-      <View style={{ display: 'flex', flexDirection: 'row' }}>
+      <View style={{ display: 'flex', flexDirection: 'row', marginTop: 12 }}>
         <Button onClick={restartApp}>
           <StyledText style={{ color: '#fff' }}>재시작하기</StyledText>
         </Button>
@@ -88,27 +99,33 @@ const App = () => {
       </View>
     </View>
   ) : (
-    <NavigationContainer
-      theme={{
-        dark: isDark,
-        colors: {
-          background: 'var(--background)',
-          border: 'var(--border)',
-          card: 'var(--card)',
-          notification: 'var(--notification)',
-          primary: 'var(--primary)',
-          text: 'var(--text)',
-        },
-      }}
-    >
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeContext.Provider value={theme}>
+      <GaknimesContext.Provider value={gaknimes}>
+        <BannersContext.Provider value={banners}>
+          <NavigationContainer
+            theme={{
+              dark: isDark,
+              colors: {
+                background: 'var(--background)',
+                border: 'var(--border)',
+                card: 'var(--card)',
+                notification: 'var(--notification)',
+                primary: 'var(--primary)',
+                text: 'var(--text)',
+              },
+            }}
+          >
+            <Stack.Navigator>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Home"
+                component={Home}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </BannersContext.Provider>
+      </GaknimesContext.Provider>
+    </ThemeContext.Provider>
   )
 }
 

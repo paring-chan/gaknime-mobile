@@ -14,8 +14,6 @@ export const Button: React.FC<
           borderRadius: 12,
           paddingLeft: 16,
           paddingRight: 16,
-          paddingTop: 4,
-          paddingBottom: 4,
         },
         style,
       ]}
