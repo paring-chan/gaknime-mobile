@@ -16,6 +16,7 @@ export const StyledText: React.FC<TextProps & { weight?: string }> = ({
         {
           fontFamily: `NotoSansKR-${weight ?? 'Regular'}`,
           color: theme.text,
+          lineHeight: 24,
         },
         style,
       ]}

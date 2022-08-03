@@ -8,21 +8,17 @@
  * @format
  */
 
-import { NavigationContainer } from '@react-navigation/native'
 import RNRestart from 'react-native-restart'
 import React from 'react'
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Home from './views/Home'
+import Main from './views/Main'
 import { BackHandler, Text, useColorScheme, View } from 'react-native'
 import axios from 'axios'
 import { Banner, Gaknime } from './types'
 import { StyledText } from './components/Text'
 import { Button } from './components'
-import { BannersContext, GaknimesContext } from './utils'
-import { ThemeContext } from 'styled-components'
-
-const Stack = createNativeStackNavigator()
+import { BannersContext, GaknimesContext, ThemeContext } from './utils'
+import { RecoilRoot } from 'recoil'
 
 const App = () => {
   const isDark = useColorScheme() === 'dark'
@@ -66,11 +62,15 @@ const App = () => {
 
   const theme = React.useMemo(() => {
     if (isDark) {
-      return {}
+      // TODO
+      // return {}
     }
 
     return {
       text: '#000',
+      footerBorder: 'rgba(0, 0, 0, 0.2)',
+      primary: '#cccc00',
+      inactiveFooterItem: 'rgba(0, 0, 0, 0.4)',
     }
   }, [isDark])
 
@@ -99,33 +99,15 @@ const App = () => {
       </View>
     </View>
   ) : (
-    <ThemeContext.Provider value={theme}>
-      <GaknimesContext.Provider value={gaknimes}>
-        <BannersContext.Provider value={banners}>
-          <NavigationContainer
-            theme={{
-              dark: isDark,
-              colors: {
-                background: 'var(--background)',
-                border: 'var(--border)',
-                card: 'var(--card)',
-                notification: 'var(--notification)',
-                primary: 'var(--primary)',
-                text: 'var(--text)',
-              },
-            }}
-          >
-            <Stack.Navigator>
-              <Stack.Screen
-                options={{ headerShown: false }}
-                name="Home"
-                component={Home}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </BannersContext.Provider>
-      </GaknimesContext.Provider>
-    </ThemeContext.Provider>
+    <RecoilRoot>
+      <ThemeContext.Provider value={theme}>
+        <GaknimesContext.Provider value={gaknimes}>
+          <BannersContext.Provider value={banners}>
+            <Main />
+          </BannersContext.Provider>
+        </GaknimesContext.Provider>
+      </ThemeContext.Provider>
+    </RecoilRoot>
   )
 }
 
