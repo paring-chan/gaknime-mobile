@@ -22,6 +22,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
 import { Home } from './views/Home'
 import Main from './views/Main'
+import { SearchPage } from './views/Search'
 
 const Stack = createNativeStackNavigator()
 
@@ -136,6 +137,11 @@ const App = () => {
                     options={{ headerShown: false }}
                     name="Home"
                     component={Main}
+                  />
+                  <Stack.Screen
+                    options={{ headerShown: false }}
+                    name="Search"
+                    component={SearchPage}
                   />
                 </Stack.Navigator>
               </NavigationContainer>

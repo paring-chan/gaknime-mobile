@@ -1,5 +1,11 @@
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { ScrollView, useColorScheme, View } from 'react-native'
+import {
+  ScrollView,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -53,6 +59,12 @@ const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
 
   const iconColor = React.useMemo(() => (isDark ? '#fff' : '#000'), [isDark])
 
+  const navigation = useNavigation()
+
+  const search = React.useCallback(() => {
+    navigation.navigate('Search' as unknown as { key: string })
+  }, [navigation])
+
   return (
     <View
       style={{
@@ -77,28 +89,39 @@ const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
       >
         GAKNIME
       </StyledText>
-      <Icon
+      <TouchableOpacity
         style={{
           position: 'absolute',
           right: 12,
           top: 12,
-          color: '#fff',
-          opacity: 1 - opacity,
+          width: 24,
+          height: 24,
         }}
-        name="search"
-        size={24}
-      />
-      <Icon
-        style={{
-          position: 'absolute',
-          right: 12,
-          top: 12,
-          color: iconColor,
-          opacity: opacity,
-        }}
-        name="search"
-        size={24}
-      />
+        onPress={search}
+      >
+        <Icon
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            color: '#fff',
+            opacity: 1 - opacity,
+          }}
+          name="search"
+          size={24}
+        />
+        <Icon
+          style={{
+            color: iconColor,
+            opacity: opacity,
+            top: 0,
+            right: 0,
+            position: 'absolute',
+          }}
+          name="search"
+          size={24}
+        />
+      </TouchableOpacity>
     </View>
   )
 }
