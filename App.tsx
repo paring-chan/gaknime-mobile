@@ -11,7 +11,6 @@
 import RNRestart from 'react-native-restart'
 import React from 'react'
 
-import Main from './views/Main'
 import { BackHandler, Text, useColorScheme, View } from 'react-native'
 import axios from 'axios'
 import { Banner, Gaknime } from './types'
@@ -19,6 +18,12 @@ import { StyledText } from './components/Text'
 import { Button } from './components'
 import { BannersContext, GaknimesContext, ThemeContext } from './utils'
 import { RecoilRoot } from 'recoil'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigationContainer } from '@react-navigation/native'
+import { Home } from './views/Home'
+import Main from './views/Main'
+
+const Stack = createNativeStackNavigator()
 
 const App = () => {
   const isDark = useColorScheme() === 'dark'
@@ -113,7 +118,27 @@ const App = () => {
         <ThemeContext.Provider value={theme}>
           <GaknimesContext.Provider value={gaknimes}>
             <BannersContext.Provider value={banners}>
-              <Main />
+              <NavigationContainer
+                theme={{
+                  dark: isDark,
+                  colors: {
+                    background: theme.background,
+                    card: theme.background,
+                    text: theme.text,
+                    border: theme.footerBorder,
+                    primary: theme.primary,
+                    notification: theme.primary,
+                  },
+                }}
+              >
+                <Stack.Navigator>
+                  <Stack.Screen
+                    options={{ headerShown: false }}
+                    name="Home"
+                    component={Main}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
             </BannersContext.Provider>
           </GaknimesContext.Provider>
         </ThemeContext.Provider>
