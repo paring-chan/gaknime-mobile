@@ -3,9 +3,9 @@ import { ScrollView, useColorScheme, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { StyledText } from '../components'
+import { StyledText, GaknimeCategory } from '../components'
 import { Banner } from '../types'
-import { useBanners, useTheme } from '../utils'
+import { randomCategories, useBanners, useGaknimes, useTheme } from '../utils'
 
 const BannerItem: React.FC<{ banner: Banner }> = ({ banner }) => {
   return (
@@ -47,7 +47,7 @@ const BannerItem: React.FC<{ banner: Banner }> = ({ banner }) => {
 const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
   const theme = useTheme()
 
-  const opacity = React.useMemo(() => Math.min(1, scrollY / 60), [scrollY])
+  const opacity = React.useMemo(() => Math.min(1, scrollY / 120), [scrollY])
 
   const isDark = useColorScheme() === 'dark'
 
@@ -108,6 +108,12 @@ export const Home: React.FC = () => {
 
   const [scrollY, setScrollY] = React.useState(0)
 
+  const gaknimes = useGaknimes()
+
+  const categories = React.useMemo(() => {
+    return randomCategories(gaknimes, 5)
+  }, [gaknimes])
+
   return (
     <View style={{ flexGrow: 1, height: 0 }}>
       <ScrollView
@@ -128,7 +134,11 @@ export const Home: React.FC = () => {
             ))}
           </Swiper>
         </View>
-        <View style={{ height: 1200 }} />
+        <View>
+          {categories.map((x, i) => (
+            <GaknimeCategory category={x} key={i} />
+          ))}
+        </View>
       </ScrollView>
       <Header scrollY={scrollY} />
     </View>

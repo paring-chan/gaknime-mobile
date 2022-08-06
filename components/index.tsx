@@ -1,3 +1,5 @@
 export * from './Button'
 export * from './Text'
 export * from './Footer'
+export * from './GaknimeCategory'
+export * from './GaknimeCard'
