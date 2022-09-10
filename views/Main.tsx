@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { View } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { Footer } from '../components'
 import { currentTabAtom, MainTabType } from '../utils'

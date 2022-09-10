@@ -11,7 +11,7 @@
 import RNRestart from 'react-native-restart'
 import React from 'react'
 
-import { BackHandler, Text, useColorScheme, View } from 'react-native'
+import { BackHandler, useColorScheme, View } from 'react-native'
 import axios from 'axios'
 import { Banner, Gaknime } from './types'
 import { StyledText } from './components/Text'
@@ -20,7 +20,6 @@ import { BannersContext, GaknimesContext, ThemeContext } from './utils'
 import { RecoilRoot } from 'recoil'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
-import { Home } from './views/Home'
 import Main from './views/Main'
 import { SearchPage } from './views/Search'
 
@@ -39,17 +38,17 @@ const App = () => {
 
   React.useEffect(() => {
     ;(async () => {
-      const { data: gaknimes } = await axios.get<Gaknime[]>(
+      const { data: fetchedGaknimes } = await axios.get<Gaknime[]>(
         'https://gakni.tech/gaknimes.json'
       )
 
-      setGaknimes(gaknimes)
+      setGaknimes(fetchedGaknimes)
 
-      const { data: banners } = await axios.get<Banner[]>(
+      const { data: fetchedBanners } = await axios.get<Banner[]>(
         'https://gakni.tech/banners.json'
       )
 
-      setBanners(banners)
+      setBanners(fetchedBanners)
 
       setLoading(false)
     })().catch((err) => {

@@ -1,15 +1,17 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import {
-  ScrollView,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native'
+import { Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import Swiper from 'react-native-swiper'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { StyledText, GaknimeCategory } from '../components'
+import { StyledText, GaknimeCategory, StyledAnimatedText } from '../components'
 import { Banner } from '../types'
 import { randomCategories, useBanners, useGaknimes, useTheme } from '../utils'
 
@@ -50,10 +52,8 @@ const BannerItem: React.FC<{ banner: Banner }> = ({ banner }) => {
   )
 }
 
-const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
+const Header: React.FC<{ scrollY: SharedValue<number> }> = ({ scrollY }) => {
   const theme = useTheme()
-
-  const opacity = React.useMemo(() => Math.min(1, scrollY / 120), [scrollY])
 
   const isDark = useColorScheme() === 'dark'
 
@@ -65,30 +65,46 @@ const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
     navigation.navigate('Search' as unknown as { key: string })
   }, [navigation])
 
+  const containerStyle = useAnimatedStyle(() => {
+    const op = interpolate(scrollY.value, [0, 200], [0, 1])
+
+    const rgb = isDark ? '0, 0, 0' : '255, 255, 255'
+
+    return { backgroundColor: `rgba(${rgb}, ${Math.max(0, Math.min(op, 1))})` }
+  })
+
+  const logoStyle = useAnimatedStyle(() => {
+    const op = interpolate(scrollY.value, [0, 200], [0, 1])
+
+    return { opacity: Math.max(0, Math.min(op, 1)) }
+  })
+
   return (
-    <View
-      style={{
-        width: '100%',
-        position: 'absolute',
-        backgroundColor: `rgba(${
-          isDark ? '0, 0, 0' : '255, 255, 255'
-        }, ${opacity})`,
-        height: 48,
-      }}
+    <Animated.View
+      style={[
+        {
+          width: '100%',
+          position: 'absolute',
+          height: 48,
+        },
+        containerStyle,
+      ]}
     >
-      <StyledText
-        style={{
-          color: theme.text,
-          alignSelf: 'center',
-          top: 12,
-          fontSize: 24,
-          lineHeight: 32,
-          opacity: Math.min(1, scrollY / 60),
-        }}
+      <StyledAnimatedText
+        style={[
+          {
+            color: theme.text,
+            alignSelf: 'center',
+            top: 12,
+            fontSize: 24,
+            lineHeight: 32,
+          },
+          logoStyle,
+        ]}
         weight="Black"
       >
         GAKNIME
-      </StyledText>
+      </StyledAnimatedText>
       <TouchableOpacity
         style={{
           position: 'absolute',
@@ -99,37 +115,31 @@ const Header: React.FC<{ scrollY: number }> = ({ scrollY }) => {
         }}
         onPress={search}
       >
-        <Icon
+        <Text
           style={{
-            position: 'absolute',
-            right: 0,
-            top: 0,
+            textShadowColor: 'rgba(0, 0, 0, 0.2)',
+            textShadowOffset: { width: 2, height: 2 },
+            textShadowRadius: 1,
             color: '#fff',
-            opacity: 1 - opacity,
           }}
-          name="search"
-          size={24}
-        />
-        <Icon
-          style={{
-            color: iconColor,
-            opacity: opacity,
-            top: 0,
-            right: 0,
-            position: 'absolute',
-          }}
-          name="search"
-          size={24}
-        />
+        >
+          <Icon name="search" size={24} />
+        </Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   )
 }
 
 export const Home: React.FC = () => {
   const banners = useBanners()
 
-  const [scrollY, setScrollY] = React.useState(0)
+  const scrollY = useSharedValue(0)
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      scrollY.value = e.contentOffset.y
+    },
+  })
 
   const gaknimes = useGaknimes()
 
@@ -139,11 +149,10 @@ export const Home: React.FC = () => {
 
   return (
     <View style={{ flexGrow: 1, height: 0 }}>
-      <ScrollView
+      <Animated.ScrollView
         style={{ height: '100%', width: '100%' }}
-        onScroll={(e) => {
-          setScrollY(e.nativeEvent.contentOffset.y)
-        }}
+        onScroll={scrollHandler}
+        scrollEventThrottle={1}
       >
         <View style={{ height: 520 }}>
           <Swiper
@@ -162,7 +171,7 @@ export const Home: React.FC = () => {
             <GaknimeCategory category={x} key={i} />
           ))}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       <Header scrollY={scrollY} />
     </View>
   )
