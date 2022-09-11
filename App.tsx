@@ -194,7 +194,11 @@ const App = () => {
                     },
                   }}
                 >
-                  <Stack.Navigator>
+                  <Stack.Navigator
+                    screenOptions={{
+                      animation: 'slide_from_right',
+                    }}
+                  >
                     <Stack.Screen
                       options={{ headerShown: false }}
                       name="Home"
