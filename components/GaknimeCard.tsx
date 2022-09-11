@@ -1,15 +1,20 @@
 import React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import {
+  Image,
+  StyleProp,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { Gaknime } from '../types'
-import { useTheme } from '../utils'
 import { StyledText } from './Text'
 
-export const GaknimeCard: React.FC<{ gaknime: Gaknime }> = ({ gaknime }) => {
-  const theme = useTheme()
-
+export const GaknimeCard: React.FC<{
+  gaknime: Gaknime
+  style?: StyleProp<ViewStyle>
+}> = ({ gaknime, style }) => {
   return (
-    <View style={{ marginRight: 24, width: 180 }}>
+    <View style={[{ marginRight: 24, width: 180 }, style]}>
       <View>
         <TouchableOpacity activeOpacity={0.6}>
           <Image
