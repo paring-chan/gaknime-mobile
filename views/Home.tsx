@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { TouchableOpacity, useColorScheme, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated, {
   interpolate,
@@ -56,8 +56,6 @@ const Header: React.FC<{ scrollY: SharedValue<number> }> = ({ scrollY }) => {
   const theme = useTheme()
 
   const isDark = useColorScheme() === 'dark'
-
-  const iconColor = React.useMemo(() => (isDark ? '#fff' : '#000'), [isDark])
 
   const navigation = useNavigation()
 
