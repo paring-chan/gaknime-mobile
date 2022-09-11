@@ -81,6 +81,7 @@ const App = () => {
         primary: '#cccc00',
         inactiveFooterItem: 'rgba(255, 255, 255, 0.4)',
         background: '#222222',
+        searchBackground: 'rgba(255, 255, 255, 0.1)',
       }
     }
 
@@ -91,6 +92,7 @@ const App = () => {
       primary: '#cccc00',
       inactiveFooterItem: 'rgba(0, 0, 0, 0.4)',
       background: '#fff',
+      searchBackground: 'rgba(0, 0, 0, 0.1)',
     }
   }, [isDark])
 

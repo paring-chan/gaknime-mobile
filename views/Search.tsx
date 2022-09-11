@@ -41,7 +41,9 @@ export const SearchPage: React.FC = () => {
       <View
         style={{
           flexDirection: 'row',
-          padding: 16,
+          height: 48,
+          paddingLeft: 16,
+          paddingRight: 12,
           borderBottomWidth: 1,
           borderBottomColor: theme.footerBorder,
           alignItems: 'center',
@@ -53,27 +55,50 @@ export const SearchPage: React.FC = () => {
         >
           <Icon name="chevron-left" color={theme.text} size={16} />
         </TouchableOpacity>
-        <TextInput
+        <View
           style={{
             flexGrow: 1,
+            flexDirection: 'row',
             width: 0,
-            fontFamily: 'NotoSansKR-Regular',
-            textAlignVertical: 'bottom',
-            padding: 0,
+            backgroundColor: theme.searchBackground,
+            alignItems: 'center',
+            paddingLeft: 8,
             paddingRight: 8,
+            borderRadius: 6,
+            height: 32,
           }}
-          onTextInput={(e) => {
-            setKeyword(e.nativeEvent.text)
-            if (throttle.current) {
-              clearTimeout(throttle.current)
-            }
+        >
+          <Icon color={theme.text} name="search" size={16} />
+          <View
+            style={{
+              flexGrow: 1,
+              width: 0,
+              overflow: 'hidden',
+              paddingVertical: 4,
+            }}
+          >
+            <TextInput
+              style={{
+                width: '100%',
+                fontFamily: 'NotoSansKR-Regular',
+                padding: 0,
+                margin: 0,
+                paddingLeft: 8,
+                height: 18,
+              }}
+              placeholder="제목, 설명으로 검색"
+              autoFocus
+              onTextInput={(e) => {
+                setKeyword(e.nativeEvent.text)
+                if (throttle.current) {
+                  clearTimeout(throttle.current)
+                }
 
-            throttle.current = setTimeout(search, 200)
-          }}
-        />
-        <TouchableOpacity>
-          <Icon color={theme.text} name="search" size={24} />
-        </TouchableOpacity>
+                throttle.current = setTimeout(search, 200)
+              }}
+            />
+          </View>
+        </View>
       </View>
       <FlatList
         numColumns={2}
