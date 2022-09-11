@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil'
 import { Footer } from '../components'
 import { currentTabAtom, MainTabType } from '../utils'
 import { Home } from './Home'
+import { TagSearch } from './TagSearch'
 
 const Main: React.FC = () => {
   const currentTab = useRecoilValue(currentTabAtom)
@@ -17,6 +18,7 @@ const Main: React.FC = () => {
       }}
     >
       {currentTab === MainTabType.Main && <Home />}
+      {currentTab === MainTabType.TagSearch && <TagSearch />}
       <Footer />
     </View>
   )
