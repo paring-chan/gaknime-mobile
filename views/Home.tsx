@@ -79,6 +79,18 @@ const Header: React.FC<{ scrollY: SharedValue<number> }> = ({ scrollY }) => {
     return { opacity: Math.max(0, Math.min(op, 1)) }
   })
 
+  const searchIconStyle = useAnimatedStyle(() => {
+    const op = interpolate(scrollY.value, [0, 200], [0, 1])
+
+    return { opacity: 1 - Math.max(0, Math.min(op, 1)) }
+  })
+
+  const searchIconScrollStyle = useAnimatedStyle(() => {
+    const op = interpolate(scrollY.value, [0, 200], [0, 1])
+
+    return { opacity: Math.max(0, Math.min(op, 1)) }
+  })
+
   return (
     <Animated.View
       style={[
@@ -115,16 +127,36 @@ const Header: React.FC<{ scrollY: SharedValue<number> }> = ({ scrollY }) => {
         }}
         onPress={search}
       >
-        <Text
-          style={{
-            textShadowColor: 'rgba(0, 0, 0, 0.2)',
-            textShadowOffset: { width: 2, height: 2 },
-            textShadowRadius: 1,
-            color: '#fff',
-          }}
+        <Animated.Text
+          style={[
+            {
+              textShadowColor: 'rgba(0, 0, 0, 0.2)',
+              textShadowOffset: { width: 2, height: 2 },
+              textShadowRadius: 1,
+              color: '#fff',
+              position: 'absolute',
+              left: 0,
+              top: 0,
+            },
+            searchIconStyle,
+          ]}
         >
           <Icon name="search" size={24} />
-        </Text>
+        </Animated.Text>
+
+        <Animated.Text
+          style={[
+            {
+              color: isDark ? '#fff' : '#000',
+              position: 'absolute',
+              left: 0,
+              top: 0,
+            },
+            searchIconScrollStyle,
+          ]}
+        >
+          <Icon name="search" size={24} />
+        </Animated.Text>
       </TouchableOpacity>
     </Animated.View>
   )
