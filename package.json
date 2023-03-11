@@ -33,7 +33,7 @@
     "@babel/core": "7.18.10",
     "@babel/runtime": "7.18.9",
     "@react-native-community/eslint-config": "2.0.0",
-    "@tsconfig/react-native": "2.0.2",
+    "@tsconfig/react-native": "2.0.3",
     "@types/jest": "26.0.24",
     "@types/lodash": "4.14.182",
     "@types/react": "18.0.15",
